@@ -1,7 +1,9 @@
 ---Знайти студента із найвищим середнім балом з певного предмета.---
-SELECT MAX AVG(number_grade), p.first_name, p.last_name
+SELECT s.full_name, AVG(number_grade) AS ser_grade 
 FROM grades AS g
-WHERE subject_id = 1
-GROUP BY student_id 
-JOIN students AS s ON g.student_id = s.id
-JOIN people AS p ON p.id = s.people_id
+LEFT JOIN students AS s ON s.id = g.student_id
+left JOIN subjects AS p ON p.id = g.subject_id
+where p.id = 1
+GROUP BY s.id 
+ORDER BY ser_grade desc
+limit 1
