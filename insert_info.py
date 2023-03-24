@@ -7,7 +7,6 @@ import random
 from contextlib import contextmanager
 
 
-
 fake = Faker("uk-UA")
 
 GROUP_LIST = ["КА-56", "МА-98", "СА-33"]
@@ -23,19 +22,26 @@ SUBJECT_LIST = [
     "Чисельні методи"
 ]
 
-if __name__ == "__main__":
-    sql_1 = """INSERT INTO people (id, full_name, age, email, phone) VALUES (%s, %s, %s, %s, %s)"""
+scientific_degree_list = [
+    "Доцент",
+    "Аспирант", 
+    "Професор",
+    "Доктор наук",
+    "Старший дослідник"
+]
 
-    with new_connect() as conn:
-        c = conn.cursor()
-        for i in range(100):
-            c.execute(sql_1, (i+1, fake.name_male(), randint(18, 30), fake.email(), fake.phone_number()))
-            conn.commit()
-        for i in range(100, 200):
-            # print(i+1, fake.name(), randint(30, 90), fake.email(), fake.phone_number())
-            c.execute(sql_1, (i+1, fake.name_male(), randint(30, 90), fake.email(), fake.phone_number()))
-            conn.commit()
-        c.close()
+def random_date(date_start: datetime, date_end: datetime):
+    date_list = [date_start]
+    res_date = date_start
+    while res_date!= date_end:
+        res_date += timedelta(days=1)
+        date_list.append(res_date)
+    result = choice(res_date)
+    return result
+
+
+
+if __name__ == "__main__":
 
     sql_2 = """INSERT INTO stu_groups (id, group_number, kurs, daytime) VALUES (%s, %s, %s, %s)"""
 
@@ -49,11 +55,45 @@ if __name__ == "__main__":
         c.close()
 
 
-    sql_3 = """INSERT INTO students (id, budget, scholarship, group_id, people_id) VALUES (%s, %s, %s, %s, %s)"""
+    sql_3 = """INSERT INTO students (id, full_name, age, email, phone, budget, scholarship, group_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
 
     with new_connect() as conn:
         c = conn.cursor()
         for i in range(50):
-            c.execute(sql_3, (i, bool(randint(0, 1)), bool(randint(0, 1)), choice(range(1, 3)), choice(range(1, 100))))
+            c.execute(sql_3, (i+1, fake.name(), randint(18, 30), fake.email(), fake.phone_number(), bool(randint(0, 1)), bool(randint(0, 1)), choice(range(1, 3)), choice(range(1, 100))))
             conn.commit()
         c.close()
+
+
+    sql_4 = """INSERT INTO teachers (id, full_name, age, email, phone, date_start_work, scientific_degree, salary) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+
+    dates
+
+    with new_connect() as conn:
+        c = conn.cursor()
+        for i in range(6):
+            c.execute(sql_4, (i, fake.name(), randint(35, 90), fake.email(), fake.phone_number(), random_date(datetime(year=2013, month=1, day=1), datetime(year=2023, month=1, day=1)), choice(scientific_degree_list)), randint(20000, 50000))
+            conn.commit()
+        c.close()
+
+    sql_5 = """INSERT INTO subjects (id, title, teacher_id) VALUES (%s, %s, %s)"""
+
+    with new_connect() as conn:
+        c = conn.cursor()
+        j = 1
+        for i in SUBJECT_LIST:
+            c.execute(sql_5, (j, i, choice(range(6))))
+            conn.commit()
+            j += 1
+        c.close()     
+
+    sql_6 = """INSERT INTO grades (id, date_create, grade, number_grade, student_id, subject_id) VALUES (%s, %s, %s)"""
+
+    with new_connect() as conn:
+        c = conn.cursor()
+        j = 1
+        for i in SUBJECT_LIST:
+            c.execute(sql_5, (j, i, choice(range(100, 200))))
+            conn.commit()
+            j += 1
+        c.close() 
