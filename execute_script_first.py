@@ -18,14 +18,13 @@ def new_connect():
 
 
 def create_table():
-    for i in range(1, 7):
+    for i in range(2, 7):
         with open(f"querty_{i+1}.sql", "r") as f:
             sql = f.read()
         with new_connect() as conn:
             c = conn.cursor()
             c.execute_script(conn, sql)
             c.close()
-
 
 
 if __name__ == '__main__':
