@@ -1,7 +1,5 @@
 CREATE TABLE if not exists students (
-id INT PRIMARY KEY,
-year_start DATE,
-year_end DATE, 
+id INT PRIMARY KEY, 
 budget BOOLEAN, 
 scholarship BOOLEAN,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
