@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS teachers;
-CREATE TABLE teachers(
+CREATE TABLE if not exists teachers(
 id INT PRIMARY KEY, 
 full_name VARCHAR(150),
 "age" INT, 
